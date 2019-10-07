@@ -37,7 +37,7 @@ public class CountryController {
 
 	//localhost:2019/data/population/size/{people} - return the countries that have a population equal to or greater than the given population
 	@GetMapping(value = "population/size/{people}", produces = {"application/json"})
-	public ResponseEntity<?> getCountriesByPopulationSize(@PathVariable long people){
+	public ResponseEntity<?> getCountriesByPopulationSize(@PathVariable int people){
 		return new ResponseEntity<>(CountriesApplication.list.findCountries(c -> c.getPopulation() >= people ), HttpStatus.OK);
 	}
 
@@ -56,8 +56,24 @@ public class CountryController {
 	}
 
 	//localhost:2019/data/age/age/{age} - return the countries that have a median age equal to or greater than the given age
+	@GetMapping(value = "age/{age}", produces = {"application/json"})
+	public ResponseEntity<?> getCountriesByMedianAge(@PathVariable int age){
+		return new ResponseEntity<>(CountriesApplication.list.findCountries(c -> c.getMedianAge() >= age ), HttpStatus.OK);
+	}
+
 	//localhost:2019/data/age/min - return the country with the smallest median age
+	@GetMapping(value = "age/min", produces = {"application/json"})
+	public ResponseEntity<?> getCountryBySmallestMedianAge(){
+		CountriesApplication.list.countryList.sort((c1,c2) -> c1.getMedianAge() - c2.getMedianAge() );
+		return new ResponseEntity<>(CountriesApplication.list.countryList.get(0), HttpStatus.OK);
+	}
+
 	//localhost:2019/data/age/max - return the country the the greatest median age
+	@GetMapping(value = "age/max", produces = {"application/json"})
+	public ResponseEntity<?> getCountryByLargestMedianAge(){
+		CountriesApplication.list.countryList.sort((c1,c2) -> c2.getMedianAge() - c1.getMedianAge() );
+		return new ResponseEntity<>(CountriesApplication.list.countryList.get(0), HttpStatus.OK);
+	}
 
 	//Stretch
 	//localhost:2019/data/population/median - return the country with the median population
