@@ -21,14 +21,26 @@ public class CountryController {
 
 	//localhost:2019/data/names/start/{letter} - return the countries alphabetically that begin with the given letter
 	@GetMapping(value = "names/start/{letter}", produces = {"application/json"})
-	public ResponseEntity<?> getAllCountriesByLetter(@PathVariable char letter){
-		ArrayList<Country> tempList =  CountriesApplication.list.findCountries(e -> e.getName().toLowerCase().charAt(0) == Character.toLowerCase(letter));
+	public ResponseEntity<?> getAllCountriesByLetter(@PathVariable String letter){
+		ArrayList<Country> tempList =  CountriesApplication.list.findCountries(e -> letter.equalsIgnoreCase(e.getName().substring(0,1)));
 		tempList.sort((e1,e2) -> e1.getName().compareToIgnoreCase(e2.getName()));
 		return new ResponseEntity<>(tempList, HttpStatus.OK);
 	}
 
 	//localhost:2019/data/names/size/{number} - return the countries alphabetically that have a name equal to or longer than the given length
+	@GetMapping(value = "names/size/{number}", produces = {"application/json"})
+	public ResponseEntity<?> getCountryByNameSize(@PathVariable int number){
+		ArrayList<Country> tempList = CountriesApplication.list.findCountries(e -> e.getName().length() >= number );
+		tempList.sort((e1,e2) -> e1.getName().compareToIgnoreCase(e2.getName()));
+		return new ResponseEntity<>(tempList, HttpStatus.OK);
+	}
+
 	//localhost:2019/data/population/size/{people} - return the countries that have a population equal to or greater than the given population
+	@GetMapping(value = "population/size/{people}", produces = {"application/json"})
+	public ResponseEntity<?> getCountriesByPopulationSize(@PathVariable long people){
+		return new ResponseEntity<>(CountriesApplication.list.findCountries(e -> e.getPopulation() >= people ), HttpStatus.OK);
+	}
+
 	//localhost:2019/data/population/min - return the country with the smallest population
 	//localhost:2019/data/population/max - return the country with the largest population
 	//localhost:2019/data/age/age/{age} - return the countries that have a median age equal to or greater than the given age
