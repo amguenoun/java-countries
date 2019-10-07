@@ -77,5 +77,31 @@ public class CountryController {
 
 	//Stretch
 	//localhost:2019/data/population/median - return the country with the median population
-	//localhost:2019/data/age/median - return the names of all the countries alphabetically
+	@GetMapping(value = "population/median", produces = {"application/json"})
+	public ResponseEntity<?> getMedianPopulation() {
+		CountriesApplication.list.countryList.sort((c1,c2) -> c2.getPopulation() - c1.getPopulation() );
+		Country holder;
+		if(CountriesApplication.list.countryList.size() % 2 == 1 ){
+			holder = CountriesApplication.list.countryList.get((CountriesApplication.list.countryList.size() + 1) /2 );
+		}
+		else{
+			holder = CountriesApplication.list.countryList.get((CountriesApplication.list.countryList.size()) /2 );
+		}
+		return new ResponseEntity<>(holder, HttpStatus.OK);
+	}
+
+
+	//localhost:2019/data/age/median - return the country with the median median age
+	@GetMapping(value = "age/median", produces = {"application/json"})
+	public ResponseEntity<?> getMedianMedianAge() {
+		CountriesApplication.list.countryList.sort((c1,c2) -> c2.getMedianAge() - c1.getMedianAge() );
+		Country holder;
+		if(CountriesApplication.list.countryList.size() % 2 == 1 ){
+			holder = CountriesApplication.list.countryList.get((CountriesApplication.list.countryList.size() + 1) /2 );
+		}
+		else{
+			holder = CountriesApplication.list.countryList.get((CountriesApplication.list.countryList.size()) /2 );
+		}
+		return new ResponseEntity<>(holder, HttpStatus.OK);
+	}
 }
